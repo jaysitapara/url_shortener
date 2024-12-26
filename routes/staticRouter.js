@@ -1,22 +1,24 @@
-const express = require("express");
-const URL = require("../models/url");
+const mongoose = require("mongoose");
 
-const router = express.Router();
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      // required: true,
+    },
+    email: {
+      type: String,
+      // required: true,
+      // unique: true,
+    },
+    password: {
+      type: String,
+      // required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-router.get("/", async (req, res) => {
-  if (!req.user) return res.redirect("/login");
-  const allurls = await URL.find({ createdBy: req.user._id });
-  return res.render("home", {
-    urls: allurls,
-  });
-});
+const User = mongoose.model("user", userSchema);
 
-router.get("/signup", (req, res) => {
-  return res.render("signup");
-});
-
-router.get("/login", (req, res) => {
-  return res.render("login");
-});
-
-module.exports = router;
+module.exports = User;
